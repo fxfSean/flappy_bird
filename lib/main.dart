@@ -26,16 +26,12 @@ class __HomePageState extends State<_HomePage> {
   double currentHeight = 0;
   double time = 0;
   double height = 0;
-  bool isStartGame = false;
+  bool gameStarted = false;
 
 
   void jump() {
     currentHeight = birdYPos;
     time = 0;
-    if(!isStartGame){
-      isStartGame = true;
-      startGame();
-    }
   }
 
   void startGame() {
@@ -49,7 +45,7 @@ class __HomePageState extends State<_HomePage> {
         timer.cancel();
         time = 0;
         birdYPos = 0;
-        isStartGame = false;
+        gameStarted = false;
         setState(() {
         });
       }
@@ -60,18 +56,29 @@ class __HomePageState extends State<_HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: jump,
+        onTap: () {
+          if(!gameStarted){
+            gameStarted = true;
+            startGame();
+          } else {
+            jump();
+          }
+        },
         child: Stack(
           children: [
             Column(
               children: [
                 Expanded(
                   flex: 2,
-                  child: AnimatedContainer(
-                    alignment: Alignment(0,birdYPos),
-                    duration: Duration(milliseconds: 0),
-                    color: Colors.blue,
-                    child: _MyBird(),
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 100,
+                        color: Colors.lightGreenAccent,
+                      ),
+                      _MyBird(birdY: birdYPos,)
+                    ],
                   ),
                 ),
                 Expanded(
@@ -89,10 +96,18 @@ class __HomePageState extends State<_HomePage> {
 }
 
 class _MyBird extends StatelessWidget {
-  const _MyBird({Key? key}) : super(key: key);
+
+  const _MyBird({Key? key, this.birdY}) : super(key: key);
+
+  final birdY;
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 50, height: 50, child: FlutterLogo());
+    return AnimatedContainer(
+      alignment: Alignment(0,birdY),
+      duration: Duration(milliseconds: 0),
+      color: Colors.blue,
+      child: FlutterLogo(),
+    );
   }
 }
