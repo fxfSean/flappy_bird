@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ffi';
 
+import 'package:flappy_bird/barrier.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -73,11 +74,7 @@ class __HomePageState extends State<_HomePage> {
                   child: Stack(
                     children: [
                       _MyBird(birdY: birdYPos,),
-                      Container(
-                        width: 50,
-                        height: 100,
-                        color: Colors.lightGreenAccent,
-                      ),
+                      MyBarrier(),
                     ],
                   ),
                 ),
