@@ -72,12 +72,12 @@ class __HomePageState extends State<_HomePage> {
                   flex: 2,
                   child: Stack(
                     children: [
+                      _MyBird(birdY: birdYPos,),
                       Container(
                         width: 50,
                         height: 100,
                         color: Colors.lightGreenAccent,
                       ),
-                      _MyBird(birdY: birdYPos,)
                     ],
                   ),
                 ),
