@@ -74,7 +74,10 @@ class __HomePageState extends State<_HomePage> {
                   child: Stack(
                     children: [
                       _MyBird(birdY: birdYPos,),
-                      MyBarrier(),
+                      AnimatedContainer(
+                        alignment: Alignment(0,1),
+                        duration: Duration(milliseconds: 0),
+                          child: MyBarrier()),
                     ],
                   ),
                 ),

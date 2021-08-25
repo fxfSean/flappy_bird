@@ -8,8 +8,8 @@ class MyBarrier extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
-      height: 100,
+      width: 100,
+      height: 200,
       color: Colors.lightGreenAccent,
     );
   }
