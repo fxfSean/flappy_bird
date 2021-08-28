@@ -24,7 +24,8 @@ class _HomePage extends StatefulWidget {
 
 class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
-  double barrierXPos = 1;
+  static double barrierXOnePos = 1;
+  double barrierXTwoPos = barrierXOnePos + 1.8;
   double currentHeight = 0;
   double time = 0;
   double height = 0;
@@ -40,19 +41,28 @@ class __HomePageState extends State<_HomePage> {
     currentHeight = birdYPos;
     Timer.periodic(Duration(milliseconds: 60), (timer) {
       time += 0.05;
-      barrierXPos -= 0.05;
+
       height = -4.9 * time * time + 2.8 * time;
       setState(() {
         birdYPos = currentHeight - height;
       });
-      if(barrierXPos < -2){
-        barrierXPos = 1.5;
-      }
+      setState(() {
+
+        if(barrierXOnePos < -2){
+          barrierXOnePos += 3.5;
+        } else {
+          barrierXOnePos -= 0.05;
+        }
+        if(barrierXTwoPos < -2){
+          barrierXTwoPos += 3.5;
+        } else {
+          barrierXTwoPos -= 0.05;
+        }
+      });
       if(birdYPos > 0.8){
         timer.cancel();
         time = 0;
         birdYPos = 0;
-        barrierXPos = 1;
         gameStarted = false;
         setState(() {
         });
@@ -82,20 +92,20 @@ class __HomePageState extends State<_HomePage> {
                     children: [
                       _MyBird(birdY: birdYPos,),
                       AnimatedContainer(
-                        alignment: Alignment(barrierXPos,1),
+                        alignment: Alignment(barrierXOnePos,1),
                         duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
                       AnimatedContainer(
-                          alignment: Alignment(barrierXPos,-1),
+                          alignment: Alignment(barrierXOnePos,-1),
                           duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
 
                       AnimatedContainer(
-                          alignment: Alignment(2 + barrierXPos,1),
+                          alignment: Alignment(barrierXTwoPos,1),
                           duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
                       AnimatedContainer(
-                          alignment: Alignment(2 + barrierXPos,-1),
+                          alignment: Alignment(barrierXTwoPos,-1),
                           duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
                     ],
