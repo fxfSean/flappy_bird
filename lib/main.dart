@@ -39,8 +39,8 @@ class __HomePageState extends State<_HomePage> {
 
   void startGame() {
     currentHeight = birdYPos;
-    Timer.periodic(Duration(milliseconds: 60), (timer) {
-      time += 0.05;
+    Timer.periodic(Duration(milliseconds: 15), (timer) {
+      time += 0.0125;
 
       height = -4.9 * time * time + 2.8 * time;
       setState(() {
@@ -51,12 +51,12 @@ class __HomePageState extends State<_HomePage> {
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.5;
         } else {
-          barrierXOnePos -= 0.05;
+          barrierXOnePos -= 0.0125;
         }
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.5;
         } else {
-          barrierXTwoPos -= 0.05;
+          barrierXTwoPos -= 0.0125;
         }
       });
       if(birdYPos > 0.8){
