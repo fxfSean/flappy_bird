@@ -92,7 +92,7 @@ class __HomePageState extends State<_HomePage> {
                     children: [
                       _MyBird(birdY: birdYPos,),
                       AnimatedContainer(
-                        alignment: Alignment(barrierXOnePos,1),
+                        alignment: Alignment(barrierXOnePos,1.1),
                         duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
                       AnimatedContainer(
@@ -101,7 +101,7 @@ class __HomePageState extends State<_HomePage> {
                           child: MyBarrier()),
 
                       AnimatedContainer(
-                          alignment: Alignment(barrierXTwoPos,1),
+                          alignment: Alignment(barrierXTwoPos,1.1),
                           duration: Duration(milliseconds: 0),
                           child: MyBarrier()),
                       AnimatedContainer(
@@ -114,7 +114,48 @@ class __HomePageState extends State<_HomePage> {
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.green,
+                      color: Colors.grey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('SCORE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25
+                                ),
+                              ),
+                              SizedBox(height: 20,),
+                              Text('0',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 35
+                                ),
+                              )
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('BEST',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25
+                                ),
+                              ),
+                              SizedBox(height: 20,),
+                              Text('0',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 35
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ))
               ],
             ),
