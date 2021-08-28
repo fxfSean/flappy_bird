@@ -8,9 +8,15 @@ class MyBarrier extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+          color: Colors.lightGreenAccent,
+          border: Border.all(
+          width: 10,
+          color: Colors.green),
+        borderRadius: BorderRadius.circular(15)
+      ),
       width: 100,
       height: 200,
-      color: Colors.lightGreenAccent,
     );
   }
 }
