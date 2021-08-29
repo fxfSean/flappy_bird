@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
   static double barrierXOnePos = 1;
   double barrierXTwoPos = barrierXOnePos + 1.8;
+  double barrierYPos = 200;
   double currentHeight = 0;
   double time = 0;
   double height = 0;
@@ -39,8 +41,8 @@ class __HomePageState extends State<_HomePage> {
 
   void startGame() {
     currentHeight = birdYPos;
-    Timer.periodic(Duration(milliseconds: 60), (timer) {
-      time += 0.05;
+    Timer.periodic(Duration(milliseconds: 15), (timer) {
+      time += 0.0125;
 
       height = -4.9 * time * time + 2.8 * time;
       setState(() {
@@ -51,12 +53,12 @@ class __HomePageState extends State<_HomePage> {
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.5;
         } else {
-          barrierXOnePos -= 0.05;
+          barrierXOnePos -= 0.0125;
         }
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.5;
         } else {
-          barrierXTwoPos -= 0.05;
+          barrierXTwoPos -= 0.0125;
         }
       });
       if(birdYPos > 0.8){
@@ -92,29 +94,78 @@ class __HomePageState extends State<_HomePage> {
                     children: [
                       _MyBird(birdY: birdYPos,),
                       AnimatedContainer(
-                        alignment: Alignment(barrierXOnePos,1),
+                        alignment: Alignment(barrierXOnePos,1.1),
                         duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: barrierYPos,
+                          )),
                       AnimatedContainer(
                           alignment: Alignment(barrierXOnePos,-1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 400 - barrierYPos,
+                          )),
 
                       AnimatedContainer(
-                          alignment: Alignment(barrierXTwoPos,1),
+                          alignment: Alignment(barrierXTwoPos,1.1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 150,
+                          )),
                       AnimatedContainer(
                           alignment: Alignment(barrierXTwoPos,-1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 250,
+                          )),
                     ],
                   ),
                 ),
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.green,
+                      color: Colors.grey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('SCORE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25
+                                ),
+                              ),
+                              SizedBox(height: 20,),
+                              Text('0',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 35
+                                ),
+                              )
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('BEST',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25
+                                ),
+                              ),
+                              SizedBox(height: 20,),
+                              Text('0',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 35
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ))
               ],
             ),

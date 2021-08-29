@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyBarrier extends StatelessWidget {
-  const MyBarrier({Key? key}) : super(key: key);
+  final double size;
+  const MyBarrier({Key? key, required this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class MyBarrier extends StatelessWidget {
         borderRadius: BorderRadius.circular(15)
       ),
       width: 100,
-      height: 200,
+      height: size,
     );
   }
 }
