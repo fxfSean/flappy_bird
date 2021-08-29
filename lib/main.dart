@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
   static double barrierXOnePos = 1;
   double barrierXTwoPos = barrierXOnePos + 1.8;
+  double barrierYPos = 200;
   double currentHeight = 0;
   double time = 0;
   double height = 0;
@@ -94,20 +96,28 @@ class __HomePageState extends State<_HomePage> {
                       AnimatedContainer(
                         alignment: Alignment(barrierXOnePos,1.1),
                         duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: barrierYPos,
+                          )),
                       AnimatedContainer(
                           alignment: Alignment(barrierXOnePos,-1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 400 - barrierYPos,
+                          )),
 
                       AnimatedContainer(
                           alignment: Alignment(barrierXTwoPos,1.1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 150,
+                          )),
                       AnimatedContainer(
                           alignment: Alignment(barrierXTwoPos,-1),
                           duration: Duration(milliseconds: 0),
-                          child: MyBarrier()),
+                          child: MyBarrier(
+                            size: 250,
+                          )),
                     ],
                   ),
                 ),
