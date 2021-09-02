@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
 import 'package:flutter/material.dart';
