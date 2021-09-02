@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,5 +21,12 @@ class MyBarrier extends StatelessWidget {
       width: 100,
       height: size,
     );
+  }
+}
+
+class BarrierHeightStrategy {
+
+  static double generateRandomHeight(){
+    return 100 + Random().nextInt(150).toDouble();
   }
 }

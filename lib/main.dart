@@ -25,7 +25,8 @@ class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
   static double barrierXOnePos = 1;
   double barrierXTwoPos = barrierXOnePos + 1.8;
-  double barrierYPos = 200;
+  double barrierHeightOne = 200;
+  double barrierHeightTwo = 150;
   double currentHeight = 0;
   double time = 0;
   double height = 0;
@@ -51,11 +52,14 @@ class __HomePageState extends State<_HomePage> {
 
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.7;
+          barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
         } else {
           barrierXOnePos -= 0.0125;
         }
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.7;
+          barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
+          print('高度：$barrierHeightTwo');
         } else {
           barrierXTwoPos -= 0.0125;
         }
@@ -151,27 +155,36 @@ class __HomePageState extends State<_HomePage> {
                               alignment: Alignment(barrierXOnePos,1.1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: barrierYPos,
+                                size: barrierHeightOne,
                               )),
                           AnimatedContainer(
                               alignment: Alignment(barrierXOnePos,-1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: 400 - barrierYPos,
+                                size: 400 - barrierHeightOne,
                               )),
 
                           AnimatedContainer(
                               alignment: Alignment(barrierXTwoPos,1.1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: 150,
+                                size: barrierHeightTwo,
                               )),
                           AnimatedContainer(
                               alignment: Alignment(barrierXTwoPos,-1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: 250,
+                                size: 400 - barrierHeightTwo,
                               )),
+                          Container(
+                            alignment: Alignment(0,-0.3),
+                            child: gameStarted
+                                ? Text('')
+                                : Text('TAP TO START',style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white
+                            ),),
+                          )
                         ],
                       ),
                     ),
