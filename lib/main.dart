@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _HomePage extends StatefulWidget {
 
 class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
-  static double barrierXOnePos = 1;
+  static double barrierXOnePos = 2;
   double barrierXTwoPos = barrierXOnePos + 1.8;
   double barrierHeightOne = 200;
   double barrierHeightTwo = 150;
@@ -32,6 +33,8 @@ class __HomePageState extends State<_HomePage> {
   double height = 0;
   bool gameStarted = false;
   bool gameOver = false;
+  double downVelocity = 0;
+  double maxDownVelocity = 2;
 
 
   void jump() {
@@ -43,8 +46,9 @@ class __HomePageState extends State<_HomePage> {
     currentHeight = birdYPos;
     Timer.periodic(Duration(milliseconds: 15), (timer) {
       time += 0.0125;
-
-      height = -4.9 * time * time + 2.7 * time;
+      downVelocity = -4.9 * time;
+      downVelocity = min(downVelocity, maxDownVelocity);
+      height = downVelocity * time + 2.7 * time;
       setState(() {
         birdYPos = currentHeight - height;
       });
