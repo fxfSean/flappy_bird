@@ -59,16 +59,23 @@ class __HomePageState extends State<_HomePage> {
 
     currentHeight = birdYPos;
     Timer.periodic(Duration(milliseconds: 15), (timer) {
-      final RenderBox renderObjBird =
+      final RenderBox birdRenderBox =
           _keyBird.currentContext?.findRenderObject() as RenderBox;
-      final position = renderObjBird.localToGlobal(Offset.zero);
-      // print('鸟大小宽：${renderObjBird.size} 位置：$position');
+      final birdPos = birdRenderBox.localToGlobal(Offset.zero);
+      print('鸟位置：${birdPos.dx} : ${birdPos.dy.roundToDouble()}');
       listKeys.forEach((element) {
         final RenderBox renderObjBird =
         element.currentContext?.findRenderObject() as RenderBox;
-        final position = renderObjBird.localToGlobal(Offset.zero);
-        print('块大小宽：${renderObjBird.size} 位置：$position');
+        final barrierPos = renderObjBird.localToGlobal(Offset.zero);
+        if(birdPos.dx + birdRenderBox.size.width > barrierPos.dx && birdPos.dy > barrierPos.dy){
+          timer.cancel();
+          _gameOver();
+          return;
+        }
+        print('块 位置：${barrierPos.dx.roundToDouble()} : ${barrierPos.dy}');
       });
+
+
       time += 0.0125;
       downVelocity = -4.9 * time;
       downVelocity = min(downVelocity, maxDownVelocity);
@@ -92,13 +99,17 @@ class __HomePageState extends State<_HomePage> {
       });
       if(birdYPos > 1){
         timer.cancel();
-        gameOver = true;
-        time = 0;
-        gameStarted = false;
+        _gameOver();
         setState(() {
         });
       }
     });
+  }
+
+  void _gameOver(){
+    gameOver = true;
+    time = 0;
+    gameStarted = false;
   }
 
   void _replay(){
