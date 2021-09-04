@@ -8,6 +8,8 @@ void main() {
   runApp(MyApp());
 }
 
+GlobalKey _keyBird = GlobalKey();
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,15 @@ class __HomePageState extends State<_HomePage> {
   bool gameOver = false;
   double downVelocity = 0;
   double maxDownVelocity = 2;
+  List<GlobalKey> listKeys = [];
+
+  @override
+  void initState() {
+    for(var i=0; i<2; i++){
+      listKeys.add(GlobalKey());
+    }
+    super.initState();
+  }
 
 
   void jump() {
@@ -43,16 +54,27 @@ class __HomePageState extends State<_HomePage> {
   }
 
   void startGame() {
+    print('宽度${MediaQuery.of(context).size.width}');
+    print('高度${MediaQuery.of(context).size.height}');
+
     currentHeight = birdYPos;
     Timer.periodic(Duration(milliseconds: 15), (timer) {
+      final RenderBox renderObjBird =
+          _keyBird.currentContext?.findRenderObject() as RenderBox;
+      final position = renderObjBird.localToGlobal(Offset.zero);
+      // print('鸟大小宽：${renderObjBird.size} 位置：$position');
+      listKeys.forEach((element) {
+        final RenderBox renderObjBird =
+        element.currentContext?.findRenderObject() as RenderBox;
+        final position = renderObjBird.localToGlobal(Offset.zero);
+        print('块大小宽：${renderObjBird.size} 位置：$position');
+      });
       time += 0.0125;
       downVelocity = -4.9 * time;
       downVelocity = min(downVelocity, maxDownVelocity);
       height = downVelocity * time + 2.7 * time;
       setState(() {
         birdYPos = currentHeight - height;
-      });
-      setState(() {
 
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.7;
@@ -159,6 +181,7 @@ class __HomePageState extends State<_HomePage> {
                               alignment: Alignment(barrierXOnePos,1.1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
+                                key: listKeys[0],
                                 size: barrierHeightOne,
                               )),
                           AnimatedContainer(
@@ -172,6 +195,7 @@ class __HomePageState extends State<_HomePage> {
                               alignment: Alignment(barrierXTwoPos,1.1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
+                                key: listKeys[1],
                                 size: barrierHeightTwo,
                               )),
                           AnimatedContainer(
@@ -263,7 +287,7 @@ class _MyBird extends StatelessWidget {
       alignment: Alignment(0,birdY),
       duration: Duration(milliseconds: 0),
       color: Colors.blue,
-      child: FlutterLogo(),
+      child: FlutterLogo(key: _keyBird,),
     );
   }
 }
