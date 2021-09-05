@@ -28,6 +28,7 @@ class __HomePageState extends State<_HomePage> {
   double birdYPos = 0;
   static double initBarrierXPos = 2;
   static double barrierXOnePos = initBarrierXPos;
+  static double barrierTotalHeight = 350;
   double barrierXTwoPos = barrierXOnePos + 1.8;
   double barrierHeightOne = 200;
   double barrierHeightTwo = 150;
@@ -43,7 +44,7 @@ class __HomePageState extends State<_HomePage> {
 
   @override
   void initState() {
-    for(var i=0; i<4; i++){
+    for(var i=0; i<2; i++){
       listKeys.add(GlobalKey());
     }
     super.initState();
@@ -103,34 +104,49 @@ class __HomePageState extends State<_HomePage> {
     listKeys[0].currentContext?.findRenderObject() as RenderBox;
     final barrierFirstPos = renderBoxFirstUpper.localToGlobal(Offset.zero);
 
-    final RenderBox renderBoxSecondUpper =
-    listKeys[1].currentContext?.findRenderObject() as RenderBox;
-    final barrierSecondPos = renderBoxSecondUpper.localToGlobal(Offset.zero);
+    print('1035 ${birdPos.dy} : ${barrierFirstPos.dy + renderBoxFirstUpper.size.height}');
+    var birdRightBorder = birdPos.dx + birdRenderBox.size.width;
+    final barrierFirstLeftBorder = barrierFirstPos.dx;
+    final barrierFirstRightBorder = barrierFirstPos.dx + renderBoxFirstUpper.size.width;
+    final barrierFirstBottomBorder = barrierFirstPos.dy;
+    final barrierFirstTopBorder = barrierFirstPos.dy -
+        (barrierTotalHeight - renderBoxFirstUpper.size.width - 65);
+    final birdTopBorder = birdPos.dy;
+    final birdBottomBorder = birdPos.dy + birdRenderBox.size.height;
 
-    final RenderBox renderBoxContainer =
-    _keyContainer.currentContext?.findRenderObject() as RenderBox;
-    final container = renderBoxContainer.localToGlobal(Offset.zero);
-    print('1036: ${renderBoxContainer.size} : ${container.dy}');
-
-    print('1035 ${birdPos.dy} : ${barrierFirstPos.dy + renderBoxFirstUpper.size.height} : container: ${renderBoxContainer.size}');
-    if(birdPos.dx + birdRenderBox.size.width > barrierFirstPos.dx){
-      if(birdPos.dy > barrierFirstPos.dy || birdPos.dy < barrierFirstPos.dy - 200){
+    if(birdRightBorder > barrierFirstLeftBorder && birdRightBorder < barrierFirstRightBorder){
+      if(birdBottomBorder > barrierFirstBottomBorder || birdTopBorder < barrierFirstTopBorder){
         print('1034 ${birdPos.dy} : ${barrierFirstPos.dy}');
         return true;
       }
     }
-    if(birdPos.dx < barrierFirstPos.dx) {
+
+    if(birdRightBorder < barrierFirstRightBorder) {
       /// 没经过第一个barrier，返回
       return false;
     }
 
-    // final RenderBox renderBoxSecondUpper =
-    // listKeys[1].currentContext?.findRenderObject() as RenderBox;
-    // final barrierSecondPos = renderBoxSecondUpper.localToGlobal(Offset.zero);
-    if(birdPos.dx + birdRenderBox.size.width > barrierSecondPos.dx
-        && birdPos.dy < barrierSecondPos.dy
-    ){
-      return true;
+    final RenderBox renderBoxSecondUpper =
+    listKeys[1].currentContext?.findRenderObject() as RenderBox;
+    final barrierSecondPos = renderBoxSecondUpper.localToGlobal(Offset.zero);
+
+    final barrierSecondLeftBorder = barrierSecondPos.dx;
+    final barrierSecondRightBorder = barrierSecondPos.dx + renderBoxSecondUpper.size.width;
+    final barrierSecondBottomBorder = barrierSecondPos.dy;
+    final barrierSecondTopBorder = barrierSecondPos.dy -
+        (barrierTotalHeight - renderBoxSecondUpper.size.width - 65);
+
+    if(barrierSecondLeftBorder <= 0) {
+      /// 第二个barrier没完全出来，返回
+      print('1038 ${renderBoxSecondUpper.size} : ${barrierSecondPos}');
+      return false;
+    }
+
+    if(birdRightBorder > barrierSecondLeftBorder && birdRightBorder < barrierSecondRightBorder){
+      if(birdBottomBorder > barrierSecondBottomBorder || birdTopBorder < barrierSecondTopBorder){
+        print('1037 ${birdPos.dy} : ${barrierSecondPos.dy}');
+        return true;
+      }
     }
     return false;
   }
@@ -181,7 +197,9 @@ class __HomePageState extends State<_HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(onPressed: (){
-                  _resetGame();
+                  setState(() {
+                    gameOver = false;
+                  });
                 }, child: Text('取消'),),
                 ElevatedButton(onPressed: (){
                   _replay();
@@ -228,26 +246,24 @@ class __HomePageState extends State<_HomePage> {
                                 size: barrierHeightOne,
                               )),
                           AnimatedContainer(
-                              key: listKeys[1],
                               alignment: Alignment(barrierXOnePos,-1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: 400 - barrierHeightOne,
+                                size: barrierTotalHeight - barrierHeightOne,
                               )),
 
                           AnimatedContainer(
-                              key: listKeys[2],
                               alignment: Alignment(barrierXTwoPos,1.1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
+                                key: listKeys[1],
                                 size: barrierHeightTwo,
                               )),
                           AnimatedContainer(
-                              key: listKeys[3],
                               alignment: Alignment(barrierXTwoPos,-1),
                               duration: Duration(milliseconds: 0),
                               child: MyBarrier(
-                                size: 400 - barrierHeightTwo,
+                                size: barrierTotalHeight - barrierHeightTwo,
                               )),
                           Container(
                             alignment: Alignment(0,-0.3),
