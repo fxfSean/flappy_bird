@@ -98,57 +98,36 @@ class __HomePageState extends State<_HomePage> {
     final RenderBox birdRenderBox =
     _keyBird.currentContext?.findRenderObject() as RenderBox;
     final birdPos = birdRenderBox.localToGlobal(Offset.zero);
-    print('鸟位置：${birdPos.dx} : ${birdPos.dy.roundToDouble()}');
-
-    final RenderBox renderBoxFirstUpper =
-    listKeys[0].currentContext?.findRenderObject() as RenderBox;
-    final barrierFirstPos = renderBoxFirstUpper.localToGlobal(Offset.zero);
-
-    print('1035 ${birdPos.dy} : ${barrierFirstPos.dy + renderBoxFirstUpper.size.height}');
-    var birdRightBorder = birdPos.dx + birdRenderBox.size.width;
-    final barrierFirstLeftBorder = barrierFirstPos.dx;
-    final barrierFirstRightBorder = barrierFirstPos.dx + renderBoxFirstUpper.size.width;
-    final barrierFirstBottomBorder = barrierFirstPos.dy;
-    final barrierFirstTopBorder = barrierFirstPos.dy -
-        (barrierTotalHeight - renderBoxFirstUpper.size.width - 65);
     final birdTopBorder = birdPos.dy;
     final birdBottomBorder = birdPos.dy + birdRenderBox.size.height;
+    var birdRightBorder = birdPos.dx + birdRenderBox.size.width;
 
-    if(birdRightBorder > barrierFirstLeftBorder && birdRightBorder < barrierFirstRightBorder){
-      if(birdBottomBorder > barrierFirstBottomBorder || birdTopBorder < barrierFirstTopBorder){
-        print('1034 ${birdPos.dy} : ${barrierFirstPos.dy}');
-        return true;
+    bool hit = false;
+    listKeys.forEach((element) {
+      final RenderBox boxBarrier =
+      element.currentContext?.findRenderObject() as RenderBox;
+      final barrierPos = boxBarrier.localToGlobal(Offset.zero);
+
+      final barrierLeftBorder = barrierPos.dx;
+      final barrierRightBorder = barrierPos.dx + boxBarrier.size.width;
+      final barrierBottomBorder = barrierPos.dy;
+      final barrierTopBorder = barrierPos.dy -
+          (barrierTotalHeight - boxBarrier.size.width - 65);
+
+      if(birdRightBorder < barrierLeftBorder || barrierLeftBorder <= 0) {
+        ///第一个barrier还没过去 or 第二个barrier没完全出来，返回
+        return;
       }
-    }
 
-    if(birdRightBorder < barrierFirstRightBorder) {
-      /// 没经过第一个barrier，返回
-      return false;
-    }
-
-    final RenderBox renderBoxSecondUpper =
-    listKeys[1].currentContext?.findRenderObject() as RenderBox;
-    final barrierSecondPos = renderBoxSecondUpper.localToGlobal(Offset.zero);
-
-    final barrierSecondLeftBorder = barrierSecondPos.dx;
-    final barrierSecondRightBorder = barrierSecondPos.dx + renderBoxSecondUpper.size.width;
-    final barrierSecondBottomBorder = barrierSecondPos.dy;
-    final barrierSecondTopBorder = barrierSecondPos.dy -
-        (barrierTotalHeight - renderBoxSecondUpper.size.width - 65);
-
-    if(barrierSecondLeftBorder <= 0) {
-      /// 第二个barrier没完全出来，返回
-      print('1038 ${renderBoxSecondUpper.size} : ${barrierSecondPos}');
-      return false;
-    }
-
-    if(birdRightBorder > barrierSecondLeftBorder && birdRightBorder < barrierSecondRightBorder){
-      if(birdBottomBorder > barrierSecondBottomBorder || birdTopBorder < barrierSecondTopBorder){
-        print('1037 ${birdPos.dy} : ${barrierSecondPos.dy}');
-        return true;
+      if(birdRightBorder > barrierLeftBorder && birdRightBorder < barrierRightBorder){
+        if(birdBottomBorder > barrierBottomBorder || birdTopBorder < barrierTopBorder){
+          print('1037 ${birdPos.dy} : ${barrierPos.dy}');
+          hit = true;
+          return;
+        }
       }
-    }
-    return false;
+    });
+    return hit;
   }
 
   void _gameOver(){
