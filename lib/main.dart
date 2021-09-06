@@ -41,6 +41,7 @@ class __HomePageState extends State<_HomePage> {
   double maxDownVelocity = 2;
   List<GlobalKey> listKeys = [];
   GlobalKey _keyContainer = GlobalKey();
+  int score = 0;
 
   @override
   void initState() {
@@ -76,12 +77,14 @@ class __HomePageState extends State<_HomePage> {
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.7;
           barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
+          score++;
         } else {
           barrierXOnePos -= 0.0125;
         }
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.7;
           barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
+          score++;
         } else {
           barrierXTwoPos -= 0.0125;
         }
@@ -124,6 +127,7 @@ class __HomePageState extends State<_HomePage> {
           return;
         }
       }
+
     });
     return hit;
   }
@@ -142,6 +146,7 @@ class __HomePageState extends State<_HomePage> {
 
   void _resetGame(){
     birdYPos = 0;
+    score = 0;
     barrierXOnePos = initBarrierXPos;
     barrierXTwoPos = barrierXOnePos + 1.8;
     setState(() {
@@ -244,9 +249,9 @@ class __HomePageState extends State<_HomePage> {
                               )),
                           Container(
                             alignment: Alignment(0,-0.3),
-                            child: gameStarted
-                                ? Text('')
-                                : Text('TAP TO START',style: TextStyle(
+                            child: Text( gameStarted
+                                ? '$score'
+                                : 'TAP TO START',style: TextStyle(
                               fontSize: 20,
                               color: Colors.white
                             ),),
