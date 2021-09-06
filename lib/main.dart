@@ -42,6 +42,7 @@ class __HomePageState extends State<_HomePage> {
   List<GlobalKey> listKeys = [];
   GlobalKey _keyContainer = GlobalKey();
   int score = 0;
+  bool isRecorded = false;
 
   @override
   void initState() {
@@ -77,14 +78,14 @@ class __HomePageState extends State<_HomePage> {
         if(barrierXOnePos < -2){
           barrierXOnePos += 3.7;
           barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
-          score++;
+          isRecorded = false;
         } else {
           barrierXOnePos -= 0.0125;
         }
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.7;
           barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
-          score++;
+          isRecorded = false;
         } else {
           barrierXTwoPos -= 0.0125;
         }
@@ -126,6 +127,10 @@ class __HomePageState extends State<_HomePage> {
           hit = true;
           return;
         }
+      }
+      if(!isRecorded && birdRightBorder > barrierRightBorder){
+        score++;
+        isRecorded = true;
       }
 
     });
