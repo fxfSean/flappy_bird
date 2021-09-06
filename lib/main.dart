@@ -82,7 +82,6 @@ class __HomePageState extends State<_HomePage> {
         if(barrierXTwoPos < -2){
           barrierXTwoPos += 3.7;
           barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
-          print('高度：$barrierHeightTwo');
         } else {
           barrierXTwoPos -= 0.0125;
         }
@@ -100,7 +99,7 @@ class __HomePageState extends State<_HomePage> {
     final birdPos = birdRenderBox.localToGlobal(Offset.zero);
     final birdTopBorder = birdPos.dy;
     final birdBottomBorder = birdPos.dy + birdRenderBox.size.height;
-    var birdRightBorder = birdPos.dx + birdRenderBox.size.width;
+    final birdRightBorder = birdPos.dx + birdRenderBox.size.width;
 
     bool hit = false;
     listKeys.forEach((element) {
@@ -112,7 +111,7 @@ class __HomePageState extends State<_HomePage> {
       final barrierRightBorder = barrierPos.dx + boxBarrier.size.width;
       final barrierBottomBorder = barrierPos.dy;
       final barrierTopBorder = barrierPos.dy -
-          (barrierTotalHeight - boxBarrier.size.width - 65);
+          (barrierTotalHeight - boxBarrier.size.width - 60);
 
       if(birdRightBorder < barrierLeftBorder || barrierLeftBorder <= 0) {
         ///第一个barrier还没过去 or 第二个barrier没完全出来，返回
@@ -121,7 +120,6 @@ class __HomePageState extends State<_HomePage> {
 
       if(birdRightBorder > barrierLeftBorder && birdRightBorder < barrierRightBorder){
         if(birdBottomBorder > barrierBottomBorder || birdTopBorder < barrierTopBorder){
-          print('1037 ${birdPos.dy} : ${barrierPos.dy}');
           hit = true;
           return;
         }
