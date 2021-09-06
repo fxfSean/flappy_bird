@@ -152,6 +152,7 @@ class __HomePageState extends State<_HomePage> {
   void _resetGame(){
     birdYPos = 0;
     score = 0;
+    isRecorded = false;
     barrierXOnePos = initBarrierXPos;
     barrierXTwoPos = barrierXOnePos + 1.8;
     setState(() {
@@ -281,7 +282,7 @@ class __HomePageState extends State<_HomePage> {
                                     ),
                                   ),
                                   SizedBox(height: 20,),
-                                  Text('0',
+                                  Text('$score',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 35
