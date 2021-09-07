@@ -272,44 +272,59 @@ class __HomePageState extends State<_HomePage> {
                         flex: 1,
                         child: Container(
                           color: Colors.grey,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('SCORE',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 25
-                                    ),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  Text('$score',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 35
-                                    ),
-                                  )
-                                ],
+                              ClipRect(
+                                clipper: _MyClipper(),
+                                child: Image(
+                                  width: double.infinity,
+                                  fit: BoxFit.fill,
+                                  image: AssetImage('assets/images/land.png'),
+                                ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('BEST',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 25
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text('SCORE',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 25
+                                          ),
+                                        ),
+                                        SizedBox(height: 20,),
+                                        Text('$score',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 35
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  Text('$maxScore',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 35
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text('BEST',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 25
+                                          ),
+                                        ),
+                                        SizedBox(height: 20,),
+                                        Text('$maxScore',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 35
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -324,6 +339,18 @@ class __HomePageState extends State<_HomePage> {
         ]
       ),
     );
+  }
+}
+
+class _MyClipper extends CustomClipper<Rect>{
+  @override
+  Rect getClip(Size size) {
+    return new Rect.fromLTRB(0, 0, size.width,  size.height- size.height/2);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return false;
   }
 }
 
