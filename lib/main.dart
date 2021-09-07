@@ -42,6 +42,7 @@ class __HomePageState extends State<_HomePage> {
   List<GlobalKey> listKeys = [];
   GlobalKey _keyContainer = GlobalKey();
   int score = 0;
+  int maxScore = 0;
   bool isRecorded = false;
 
   @override
@@ -142,6 +143,7 @@ class __HomePageState extends State<_HomePage> {
     gameOver = true;
     time = 0;
     gameStarted = false;
+    maxScore = max(maxScore, score);
     setState(() {
     });
   }
@@ -255,11 +257,11 @@ class __HomePageState extends State<_HomePage> {
                                 size: barrierTotalHeight - barrierHeightTwo,
                               )),
                           Container(
-                            alignment: Alignment(0,-0.3),
+                            alignment: Alignment(0,-0.5),
                             child: Text( gameStarted
                                 ? '$score'
                                 : 'TAP TO START',style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 25,
                               color: Colors.white
                             ),),
                           )
@@ -301,7 +303,7 @@ class __HomePageState extends State<_HomePage> {
                                     ),
                                   ),
                                   SizedBox(height: 20,),
-                                  Text('0',
+                                  Text('$maxScore',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 35
