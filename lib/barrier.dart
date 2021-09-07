@@ -27,6 +27,6 @@ class MyBarrier extends StatelessWidget {
 class BarrierHeightStrategy {
 
   static double generateRandomHeight(){
-    return 100 + Random().nextInt(150).toDouble();
+    return 50 + Random().nextInt(250).toDouble();
   }
 }

@@ -30,8 +30,8 @@ class __HomePageState extends State<_HomePage> {
   static double barrierXOnePos = initBarrierXPos;
   static double barrierTotalHeight = 350;
   double barrierXTwoPos = barrierXOnePos + 1.8;
-  double barrierHeightOne = 200;
-  double barrierHeightTwo = 150;
+  double barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
+  double barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
   double currentHeight = 0;
   double time = 0;
   double height = 0;
@@ -49,6 +49,7 @@ class __HomePageState extends State<_HomePage> {
     for(var i=0; i<2; i++){
       listKeys.add(GlobalKey());
     }
+
     super.initState();
   }
 
