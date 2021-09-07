@@ -339,7 +339,7 @@ class _MyBird extends StatelessWidget {
       alignment: Alignment(0,birdY),
       duration: Duration(milliseconds: 0),
       color: Colors.blue,
-      child: FlutterLogo(key: _keyBird,),
+      child: Image(key: _keyBird, image: AssetImage('assets/images/bird.png'),),
     );
   }
 }
