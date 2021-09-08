@@ -24,7 +24,8 @@ class _HomePage extends StatefulWidget {
   __HomePageState createState() => __HomePageState();
 }
 
-class __HomePageState extends State<_HomePage> {
+class __HomePageState extends State<_HomePage>
+    with TickerProviderStateMixin{
   double birdYPos = 0;
   static double initBarrierXPos = 2;
   static double barrierXOnePos = initBarrierXPos;
@@ -44,12 +45,19 @@ class __HomePageState extends State<_HomePage> {
   int score = 0;
   int maxScore = 0;
   bool isRecorded = false;
+  Animation<Offset>? _animation;
+  Animation<Offset>? _animation2;
+  AnimationController? _animationController;
 
   @override
   void initState() {
     for(var i=0; i<2; i++){
       listKeys.add(GlobalKey());
     }
+    _animationController = AnimationController(duration: Duration(milliseconds: 3500),vsync: this);
+    _animation = Tween(begin: Offset.zero,end: Offset(-1,0)).animate(_animationController!);
+    _animation2 = Tween(begin: Offset(1,0),end: Offset.zero).animate(_animationController!);
+    _animationController!.repeat(reverse: false);
 
     super.initState();
   }
@@ -144,6 +152,7 @@ class __HomePageState extends State<_HomePage> {
     time = 0;
     gameStarted = false;
     maxScore = max(maxScore, score);
+    _animationController!.stop();
     setState(() {
     });
   }
@@ -158,6 +167,7 @@ class __HomePageState extends State<_HomePage> {
     isRecorded = false;
     barrierXOnePos = initBarrierXPos;
     barrierXTwoPos = barrierXOnePos + 1.8;
+    _animationController!.repeat(reverse: false);
     setState(() {
       gameOver = false;
     });
@@ -273,14 +283,33 @@ class __HomePageState extends State<_HomePage> {
                         child: Container(
                           color: Colors.grey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ClipRect(
-                                clipper: _MyClipper(),
-                                child: Image(
-                                  width: double.infinity,
-                                  fit: BoxFit.fill,
-                                  image: AssetImage('assets/images/land.png'),
+                              RepaintBoundary(
+                                child: Stack(
+                                  children: [
+                                    SlideTransition(
+                                      position: _animation!,
+                                      child: ClipRect(
+                                        clipper: _MyClipper(),
+                                        child: Image(
+                                          fit: BoxFit.fill,
+                                          width: MediaQuery.of(context).size.width,
+                                          image: AssetImage('assets/images/land.png'),
+                                        ),
+                                      ),
+                                    ),
+                                    SlideTransition(
+                                      position: _animation2!,
+                                      child: ClipRect(
+                                        clipper: _MyClipper(),
+                                        child: Image(
+                                          fit: BoxFit.fill,
+                                          width: MediaQuery.of(context).size.width,
+                                          image: AssetImage('assets/images/land.png'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               Expanded(
