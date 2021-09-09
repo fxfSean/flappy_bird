@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
+import 'package:flappy_bird/land.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,8 +25,7 @@ class _HomePage extends StatefulWidget {
   __HomePageState createState() => __HomePageState();
 }
 
-class __HomePageState extends State<_HomePage>
-    with TickerProviderStateMixin{
+class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
   double birdYPos = 0;
   static double initBarrierXPos = 2;
   static double barrierXOnePos = initBarrierXPos;
@@ -45,20 +45,15 @@ class __HomePageState extends State<_HomePage>
   int score = 0;
   int maxScore = 0;
   bool isRecorded = false;
-  Animation<Offset>? _animation;
-  Animation<Offset>? _animation2;
-  AnimationController? _animationController;
+  late LandArea _landArea;
 
   @override
   void initState() {
+    _landArea = LandArea(this);
+
     for(var i=0; i<2; i++){
       listKeys.add(GlobalKey());
     }
-    _animationController = AnimationController(duration: Duration(milliseconds: 3500),vsync: this);
-    _animation = Tween(begin: Offset.zero,end: Offset(-1,0)).animate(_animationController!);
-    _animation2 = Tween(begin: Offset(1,0),end: Offset.zero).animate(_animationController!);
-    _animationController!.repeat(reverse: false);
-
     super.initState();
   }
 
@@ -151,8 +146,8 @@ class __HomePageState extends State<_HomePage>
     gameOver = true;
     time = 0;
     gameStarted = false;
+    _landArea.gameOver();
     maxScore = max(maxScore, score);
-    _animationController!.stop();
     setState(() {
     });
   }
@@ -165,9 +160,9 @@ class __HomePageState extends State<_HomePage>
     birdYPos = 0;
     score = 0;
     isRecorded = false;
+    _landArea.gameStart();
     barrierXOnePos = initBarrierXPos;
     barrierXTwoPos = barrierXOnePos + 1.8;
-    _animationController!.repeat(reverse: false);
     setState(() {
       gameOver = false;
     });
@@ -285,32 +280,7 @@ class __HomePageState extends State<_HomePage>
                           child: Column(
                             children: [
                               RepaintBoundary(
-                                child: Stack(
-                                  children: [
-                                    SlideTransition(
-                                      position: _animation!,
-                                      child: ClipRect(
-                                        clipper: _MyClipper(),
-                                        child: Image(
-                                          fit: BoxFit.fill,
-                                          width: MediaQuery.of(context).size.width,
-                                          image: AssetImage('assets/images/land.png'),
-                                        ),
-                                      ),
-                                    ),
-                                    SlideTransition(
-                                      position: _animation2!,
-                                      child: ClipRect(
-                                        clipper: _MyClipper(),
-                                        child: Image(
-                                          fit: BoxFit.fill,
-                                          width: MediaQuery.of(context).size.width,
-                                          image: AssetImage('assets/images/land.png'),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                child: _landArea.build(context),
                               ),
                               Expanded(
                                 child: Row(
@@ -368,18 +338,6 @@ class __HomePageState extends State<_HomePage>
         ]
       ),
     );
-  }
-}
-
-class _MyClipper extends CustomClipper<Rect>{
-  @override
-  Rect getClip(Size size) {
-    return new Rect.fromLTRB(0, 0, size.width,  size.height- size.height/2);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    return false;
   }
 }
 
