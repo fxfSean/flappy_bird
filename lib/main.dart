@@ -2,14 +2,17 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flappy_bird/barrier.dart';
+import 'package:flappy_bird/bird.dart';
+import 'package:flappy_bird/hit_strategy.dart';
 import 'package:flappy_bird/land.dart';
+import 'package:flappy_bird/score_counter.dart';
 import 'package:flutter/material.dart';
+
+import 'constants.dart';
 
 void main() {
   runApp(MyApp());
 }
-
-GlobalKey _keyBird = GlobalKey();
 
 class MyApp extends StatelessWidget {
   @override
@@ -26,48 +29,46 @@ class _HomePage extends StatefulWidget {
 }
 
 class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
-  double birdYPos = 0;
-  static double initBarrierXPos = 2;
-  static double barrierXOnePos = initBarrierXPos;
-  static double barrierTotalHeight = 350;
-  double barrierXTwoPos = barrierXOnePos + 1.8;
-  double barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
-  double barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
-  double currentHeight = 0;
+
   double time = 0;
   double height = 0;
   bool gameStarted = false;
   bool gameOver = false;
   double downVelocity = 0;
   double maxDownVelocity = 2;
-  List<GlobalKey> listKeys = [];
-  GlobalKey _keyContainer = GlobalKey();
   int score = 0;
   int maxScore = 0;
   bool isRecorded = false;
+
   late LandArea _landArea;
+  late MyBarrier _myBarrier;
+  late HitStrategy _hitStrategy;
+  late MyBird _myBird;
 
   @override
   void initState() {
     _landArea = LandArea(this);
-
-    for(var i=0; i<2; i++){
-      listKeys.add(GlobalKey());
-    }
+    _myBarrier = MyBarrier();
+    _myBird = MyBird();
+    _hitStrategy = HitStrategy(_myBarrier,_myBird);
+    scoreCounter.isRecordedController.stream.listen((event) {
+      if (event) {
+        score++;
+      }
+    });
     super.initState();
   }
 
 
   void jump() {
-    currentHeight = birdYPos;
+    _myBird.jump();
     time = 0;
   }
 
   void startGame() {
-
-    currentHeight = birdYPos;
+    _myBird.startGame();
     Timer.periodic(Duration(milliseconds: 15), (timer) {
-      if(hitBarriers()){
+      if(_hitStrategy.hitTest()){
         timer.cancel();
         _gameOver();
         return;
@@ -78,68 +79,14 @@ class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
       downVelocity = min(downVelocity, maxDownVelocity);
       height = downVelocity * time + 2.7 * time;
       setState(() {
-        birdYPos = currentHeight - height;
-
-        if(barrierXOnePos < -2){
-          barrierXOnePos += 3.7;
-          barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
-          isRecorded = false;
-        } else {
-          barrierXOnePos -= 0.0125;
-        }
-        if(barrierXTwoPos < -2){
-          barrierXTwoPos += 3.7;
-          barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
-          isRecorded = false;
-        } else {
-          barrierXTwoPos -= 0.0125;
-        }
+        _myBird.updateHeight(height);
       });
-      if(birdYPos > 1){
+      _myBarrier.updateBarrierPos();
+      if(_hitStrategy.hitGround()){
         timer.cancel();
         _gameOver();
       }
     });
-  }
-
-  bool hitBarriers(){
-    final RenderBox birdRenderBox =
-    _keyBird.currentContext?.findRenderObject() as RenderBox;
-    final birdPos = birdRenderBox.localToGlobal(Offset.zero);
-    final birdTopBorder = birdPos.dy;
-    final birdBottomBorder = birdPos.dy + birdRenderBox.size.height;
-    final birdRightBorder = birdPos.dx + birdRenderBox.size.width;
-
-    bool hit = false;
-    listKeys.forEach((element) {
-      final RenderBox boxBarrier =
-      element.currentContext?.findRenderObject() as RenderBox;
-      final barrierPos = boxBarrier.localToGlobal(Offset.zero);
-
-      final barrierLeftBorder = barrierPos.dx;
-      final barrierRightBorder = barrierPos.dx + boxBarrier.size.width;
-      final barrierBottomBorder = barrierPos.dy;
-      final barrierTopBorder = barrierPos.dy -
-          (barrierTotalHeight - boxBarrier.size.width - 60);
-
-      if(birdRightBorder < barrierLeftBorder || barrierLeftBorder <= 0) {
-        ///第一个barrier还没过去 or 第二个barrier没完全出来，返回
-        return;
-      }
-
-      if(birdRightBorder > barrierLeftBorder && birdRightBorder < barrierRightBorder){
-        if(birdBottomBorder > barrierBottomBorder || birdTopBorder < barrierTopBorder){
-          hit = true;
-          return;
-        }
-      }
-      if(!isRecorded && birdRightBorder > barrierRightBorder){
-        score++;
-        isRecorded = true;
-      }
-
-    });
-    return hit;
   }
 
   void _gameOver(){
@@ -157,12 +104,11 @@ class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
   }
 
   void _resetGame(){
-    birdYPos = 0;
     score = 0;
     isRecorded = false;
     _landArea.gameStart();
-    barrierXOnePos = initBarrierXPos;
-    barrierXTwoPos = barrierXOnePos + 1.8;
+    _myBarrier.resetGame();
+    _myBird.resetGame();
     setState(() {
       gameOver = false;
     });
@@ -229,38 +175,11 @@ class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
                 Column(
                   children: [
                     Expanded(
-                      key: _keyContainer,
                       flex: 2,
                       child: Stack(
                         children: [
-                          _MyBird(birdY: birdYPos,),
-                          AnimatedContainer(
-                              alignment: Alignment(barrierXOnePos,1.1),
-                              duration: Duration(milliseconds: 0),
-                              child: MyBarrier(
-                                key: listKeys[0],
-                                size: barrierHeightOne,
-                              )),
-                          AnimatedContainer(
-                              alignment: Alignment(barrierXOnePos,-1),
-                              duration: Duration(milliseconds: 0),
-                              child: MyBarrier(
-                                size: barrierTotalHeight - barrierHeightOne,
-                              )),
-
-                          AnimatedContainer(
-                              alignment: Alignment(barrierXTwoPos,1.1),
-                              duration: Duration(milliseconds: 0),
-                              child: MyBarrier(
-                                key: listKeys[1],
-                                size: barrierHeightTwo,
-                              )),
-                          AnimatedContainer(
-                              alignment: Alignment(barrierXTwoPos,-1),
-                              duration: Duration(milliseconds: 0),
-                              child: MyBarrier(
-                                size: barrierTotalHeight - barrierHeightTwo,
-                              )),
+                          _myBird.build(),
+                          ..._myBarrier.barrierBuilder(context),
                           Container(
                             alignment: Alignment(0,-0.5),
                             child: Text( gameStarted
@@ -337,23 +256,6 @@ class __HomePageState extends State<_HomePage> with TickerProviderStateMixin {
             _gameOverDialog(),
         ]
       ),
-    );
-  }
-}
-
-class _MyBird extends StatelessWidget {
-
-  const _MyBird({Key? key, this.birdY}) : super(key: key);
-
-  final birdY;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      alignment: Alignment(0,birdY),
-      duration: Duration(milliseconds: 0),
-      color: Colors.blue,
-      child: Image(key: _keyBird, image: AssetImage('assets/images/bird.png'),),
     );
   }
 }
