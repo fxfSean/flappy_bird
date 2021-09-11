@@ -89,8 +89,13 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
     });
   }
 
-  void _replay(){
-    _resetGame();
+  void _replay(bool replay){
+    if (replay) {
+      _resetGame();
+    }
+    setState(() {
+      gameOver = false;
+    });
   }
 
   void _resetGame(){
@@ -99,9 +104,18 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
     _landArea.gameStart();
     _myBarrier.resetGame();
     _myBird.resetGame();
-    setState(() {
-      gameOver = false;
-    });
+  }
+
+  void onUserTab() {
+    if (gameOver) {
+      return;
+    }
+    if(!gameStarted){
+      gameStarted = true;
+      startGame();
+    } else {
+      jump();
+    }
   }
 
   Widget _gameOverDialog(){
@@ -129,12 +143,10 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(onPressed: (){
-                  setState(() {
-                    gameOver = false;
-                  });
+                  _replay(false);
                 }, child: Text('取消'),),
                 ElevatedButton(onPressed: (){
-                  _replay();
+                  _replay(true);
                 }, child: Text('重试'))
               ],)
           ],
@@ -149,17 +161,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
       body: Stack(
           children: [
             GestureDetector(
-              onTap: () {
-                if (gameOver) {
-                  return;
-                }
-                if(!gameStarted){
-                  gameStarted = true;
-                  startGame();
-                } else {
-                  jump();
-                }
-              },
+              onTap: onUserTab,
               child: Stack(
                 children: [
                   Column(
