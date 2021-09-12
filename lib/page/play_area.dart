@@ -137,7 +137,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
               ),
             ),
             SizedBox(height: 10,),
-            FlutterLogo(size: 40,),
+            Image(image: AssetImage('assets/images/bird.png'),),
             SizedBox(height: 20,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
