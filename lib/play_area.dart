@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'barrier.dart';
 import 'bird.dart';
+import 'constants.dart';
 import 'hit_strategy.dart';
 import 'land.dart';
 
@@ -25,7 +26,6 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
   bool gameStarted = false;
   bool gameOver = false;
   double downVelocity = 0;
-  double maxDownVelocity = 2;
   int score = 0;
   int maxScore = 0;
   bool isRecorded = false;
@@ -66,7 +66,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
 
       time += 0.0125;
       downVelocity = -4.9 * time;
-      downVelocity = min(downVelocity, maxDownVelocity);
+      downVelocity = min(downVelocity, Constants.maxDownVelocity);
       height = downVelocity * time + 2.7 * time;
       setState(() {
         _myBird.updateHeight(height);
@@ -184,61 +184,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                            color: Colors.grey,
-                            child: Column(
-                              children: [
-                                RepaintBoundary(
-                                  child: _landArea.build(context),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text('SCORE',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 25
-                                            ),
-                                          ),
-                                          SizedBox(height: 20,),
-                                          Text('$score',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 35
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text('BEST',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 25
-                                            ),
-                                          ),
-                                          SizedBox(height: 20,),
-                                          Text('$maxScore',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 35
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))
+                      _buildScoreContent(context)
                     ],
                   ),
                 ],
@@ -248,6 +194,61 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
               _gameOverDialog(),
           ]
       ),
+    );
+  }
+
+  Expanded _buildScoreContent(BuildContext context) {
+    return Expanded(
+        flex: 1,
+        child: Container(
+          color: Colors.grey,
+          child: Column(
+            children: [
+              RepaintBoundary(
+                child: _landArea.build(context),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'SCORE',
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          '$score',
+                          style: TextStyle(color: Colors.white, fontSize: 35),
+                        )
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'BEST',
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          '$maxScore',
+                          style: TextStyle(color: Colors.white, fontSize: 35),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
     );
   }
 }
