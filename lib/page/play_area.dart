@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flappy_bird/strategy/game_engine.dart';
 import 'package:flappy_bird/strategy/score_counter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,103 +20,16 @@ class PlayArea extends StatefulWidget {
   _PlayAreaState createState() => _PlayAreaState();
 }
 
-class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
+class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin,
+      OnRefreshListener{
+  GameEngine _gameEngine = GameEngine();
 
-  double time = 0;
-  double height = 0;
-  bool gameStarted = false;
-  bool gameOver = false;
-  double downVelocity = 0;
-  int score = 0;
-  int maxScore = 0;
-  bool isRecorded = false;
-
-  late LandArea _landArea;
-  late MyBarrier _myBarrier;
-  late HitStrategy _hitStrategy;
-  late MyBird _myBird;
 
   @override
   void initState() {
-    _landArea = LandArea(this);
-    _myBarrier = MyBarrier();
-    _myBird = MyBird();
-    _hitStrategy = HitStrategy(_myBarrier,_myBird);
-    scoreCounter.isRecordedController.stream.listen((event) {
-      if (event) {
-        score++;
-      }
-    });
+    _gameEngine.init(this,this);
+
     super.initState();
-  }
-
-
-  void jump() {
-    _myBird.jump();
-    time = 0;
-  }
-
-  void startGame() {
-    _myBird.startGame();
-    Timer.periodic(Duration(milliseconds: 15), (timer) {
-      if(_hitStrategy.hitTest()){
-        timer.cancel();
-        _gameOver();
-        return;
-      }
-
-      time += 0.0125;
-      downVelocity = -4.9 * time;
-      downVelocity = min(downVelocity, Constants.maxDownVelocity);
-      height = downVelocity * time + 2.7 * time;
-      setState(() {
-        _myBird.updateHeight(height);
-      });
-      _myBarrier.updateBarrierPos();
-      if(_hitStrategy.hitGround()){
-        timer.cancel();
-        _gameOver();
-      }
-    });
-  }
-
-  void _gameOver(){
-    gameOver = true;
-    time = 0;
-    gameStarted = false;
-    _landArea.gameOver();
-    maxScore = max(maxScore, score);
-    setState(() {
-    });
-  }
-
-  void _replay(bool replay){
-    if (replay) {
-      _resetGame();
-    }
-    setState(() {
-      gameOver = false;
-    });
-  }
-
-  void _resetGame(){
-    score = 0;
-    isRecorded = false;
-    _landArea.gameStart();
-    _myBarrier.resetGame();
-    _myBird.resetGame();
-  }
-
-  void onUserTab() {
-    if (gameOver) {
-      return;
-    }
-    if(!gameStarted){
-      gameStarted = true;
-      startGame();
-    } else {
-      jump();
-    }
   }
 
   Widget _gameOverDialog(){
@@ -143,10 +57,10 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(onPressed: (){
-                  _replay(false);
+                  _gameEngine.replay(false);
                 }, child: Text('取消'),),
                 ElevatedButton(onPressed: (){
-                  _replay(true);
+                  _gameEngine.replay(true);
                 }, child: Text('重试'))
               ],)
           ],
@@ -161,7 +75,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
       body: Stack(
           children: [
             GestureDetector(
-              onTap: onUserTab,
+              onTap: _gameEngine.onUserTab,
               child: Stack(
                 children: [
                   Column(
@@ -170,12 +84,12 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
                         flex: 2,
                         child: Stack(
                           children: [
-                            _myBird.build(),
-                            ..._myBarrier.barrierBuilder(context),
+                            _gameEngine.myBird.build(),
+                            ..._gameEngine.myBarrier.barrierBuilder(context),
                             Container(
                               alignment: Alignment(0,-0.5),
-                              child: Text( gameStarted
-                                  ? '$score'
+                              child: Text( _gameEngine.gameStarted
+                                  ? '${_gameEngine.score}'
                                   : 'TAP TO START',style: TextStyle(
                                   fontSize: 25,
                                   color: Colors.white
@@ -190,7 +104,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            if(gameOver)
+            if(_gameEngine.gameOver)
               _gameOverDialog(),
           ]
       ),
@@ -205,7 +119,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
           child: Column(
             children: [
               RepaintBoundary(
-                child: _landArea.build(context),
+                child: _gameEngine.landArea.build(context),
               ),
               Expanded(
                 child: Row(
@@ -222,7 +136,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
                           height: 20,
                         ),
                         Text(
-                          '$score',
+                          '${_gameEngine.score}',
                           style: TextStyle(color: Colors.white, fontSize: 35),
                         )
                       ],
@@ -238,7 +152,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
                           height: 20,
                         ),
                         Text(
-                          '$maxScore',
+                          '${_gameEngine.maxScore}',
                           style: TextStyle(color: Colors.white, fontSize: 35),
                         )
                       ],
@@ -250,5 +164,11 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin {
           ),
         )
     );
+  }
+
+  @override
+  void refresh() {
+    setState(() {
+    });
   }
 }
