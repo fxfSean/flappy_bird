@@ -1,5 +1,5 @@
 
-import 'package:flappy_bird/component.dart';
+import 'package:flappy_bird/component/component.dart';
 import 'package:flutter/cupertino.dart';
 
 class LandArea{

@@ -1,10 +1,10 @@
 
-import 'package:flappy_bird/barrier.dart';
-import 'package:flappy_bird/bird.dart';
-import 'package:flappy_bird/score_counter.dart';
+import 'package:flappy_bird/component/barrier.dart';
+import 'package:flappy_bird/component/bird.dart';
+import 'package:flappy_bird/strategy/score_counter.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'constants.dart';
+import '../constants/constants.dart';
 
 class HitStrategy {
   final MyBarrier _myBarrier;

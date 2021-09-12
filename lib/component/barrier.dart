@@ -1,11 +1,11 @@
 
 import 'dart:math';
 
-import 'package:flappy_bird/score_counter.dart';
+import 'package:flappy_bird/strategy/score_counter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import '../constants/constants.dart';
 
 class MyBarrier {
   static double initBarrierXPos = 2;

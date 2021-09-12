@@ -1,5 +1,5 @@
 
-import 'package:flappy_bird/play_area.dart';
+import 'package:flappy_bird/page/play_area.dart';
 import 'package:flutter/material.dart';
 
 

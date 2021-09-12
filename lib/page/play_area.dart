@@ -2,15 +2,15 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flappy_bird/score_counter.dart';
+import 'package:flappy_bird/strategy/score_counter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'barrier.dart';
-import 'bird.dart';
-import 'constants.dart';
-import 'hit_strategy.dart';
-import 'land.dart';
+import '../component/barrier.dart';
+import '../component/bird.dart';
+import '../constants/constants.dart';
+import '../strategy/hit_strategy.dart';
+import '../component/land.dart';
 
 class PlayArea extends StatefulWidget {
   const PlayArea({Key? key}) : super(key: key);
