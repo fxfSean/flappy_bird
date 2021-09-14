@@ -89,7 +89,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin,
                             Container(
                               alignment: Alignment(0,-0.5),
                               child: Text( _gameEngine.gameStarted
-                                  ? '${_gameEngine.score}'
+                                  ? '${scoreCounter.score}'
                                   : 'TAP TO START',style: TextStyle(
                                   fontSize: 25,
                                   color: Colors.white
@@ -136,7 +136,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin,
                           height: 20,
                         ),
                         Text(
-                          '${_gameEngine.score}',
+                          '${scoreCounter.score}',
                           style: TextStyle(color: Colors.white, fontSize: 35),
                         )
                       ],
@@ -152,7 +152,7 @@ class _PlayAreaState extends State<PlayArea> with TickerProviderStateMixin,
                           height: 20,
                         ),
                         Text(
-                          '${_gameEngine.maxScore}',
+                          '${scoreCounter.maxScore}',
                           style: TextStyle(color: Colors.white, fontSize: 35),
                         )
                       ],

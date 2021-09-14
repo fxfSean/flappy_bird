@@ -16,8 +16,7 @@ class GameEngine {
   double time = 0;
   bool gameStarted = false;
   bool gameOver = false;
-  int score = 0;
-  int maxScore = 0;
+
   bool isRecorded = false;
 
   late LandArea landArea;
@@ -33,11 +32,6 @@ class GameEngine {
     _hitStrategy = HitStrategy(myBarrier,myBird);
     _refreshListener = onRefreshListener;
 
-    scoreCounter.isRecordedController.stream.listen((event) {
-      if (event) {
-        score++;
-      }
-    });
   }
 
   void startGame() {
@@ -67,7 +61,7 @@ class GameEngine {
     time = 0;
     gameStarted = false;
     landArea.gameOver();
-    maxScore = max(maxScore, score);
+    scoreCounter.calculateMax();
     _refreshListener.refresh();
   }
 
@@ -80,7 +74,7 @@ class GameEngine {
   }
 
   void _resetGame(){
-    score = 0;
+    scoreCounter.reset();
     isRecorded = false;
     landArea.gameStart();
     myBarrier.resetGame();
