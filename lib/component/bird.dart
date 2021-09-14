@@ -1,4 +1,7 @@
 
+import 'dart:math';
+
+import 'package:flappy_bird/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +9,9 @@ class MyBird {
   GlobalKey keyBird = GlobalKey();
   double birdYPos = 0;
   double currentHeight = 0;
+  double downVelocity = 0;
+  double fallDownDistance = 0;
+
 
 
   Widget build() {
@@ -29,8 +35,11 @@ class MyBird {
     currentHeight = birdYPos;
   }
 
-  void updateHeight(double height) {
-    birdYPos = currentHeight - height;
+  void updateHeight(double time) {
+    downVelocity = -4.9 * time;
+    downVelocity = min(downVelocity, Constants.maxDownVelocity);
+    fallDownDistance = downVelocity * time + 2.7 * time;
+    birdYPos = currentHeight - fallDownDistance;
   }
 
 }

@@ -14,10 +14,8 @@ import 'hit_strategy.dart';
 class GameEngine {
 
   double time = 0;
-  double height = 0;
   bool gameStarted = false;
   bool gameOver = false;
-  double downVelocity = 0;
   int score = 0;
   int maxScore = 0;
   bool isRecorded = false;
@@ -53,15 +51,13 @@ class GameEngine {
       }
 
       time += 0.0125;
-      downVelocity = -4.9 * time;
-      downVelocity = min(downVelocity, Constants.maxDownVelocity);
-      height = downVelocity * time + 2.7 * time;
-      myBird.updateHeight(height);
-      _refreshListener.refresh();
+      myBird.updateHeight(time);
       myBarrier.updateBarrierPos();
       if(_hitStrategy.hitGround()){
         timer.cancel();
         _gameOver();
+      } else {
+        _refreshListener.refresh();
       }
     });
   }
