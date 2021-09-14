@@ -6,15 +6,9 @@ import 'dart:math';
 class ScoreCounter {
   int score = 0;
   int maxScore = 0;
-  StreamController<bool> isRecordedController = StreamController<bool>.broadcast();
+  bool _isRecorded = false;
+  bool get isRecorded => _isRecorded;
 
-  void init() {
-    isRecordedController.stream.listen((event) {
-      if (event) {
-        score++;
-      }
-    });
-  }
 
   void calculateMax() {
     maxScore = max(maxScore, score);
@@ -22,8 +16,18 @@ class ScoreCounter {
 
   void reset() {
     score = 0;
+    _isRecorded = false;
+  }
+
+  void increaseScore() {
+    _isRecorded = true;
+    score++;
+  }
+
+  void markUnRecorded() {
+    _isRecorded = false;
   }
 
 }
 
-ScoreCounter scoreCounter = ScoreCounter()..init();
+ScoreCounter scoreCounter = ScoreCounter();

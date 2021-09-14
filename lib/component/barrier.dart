@@ -51,14 +51,14 @@ class MyBarrier {
     if(barrierXOnePos < -2){
       barrierXOnePos += 3.7;
       barrierHeightOne = BarrierHeightStrategy.generateRandomHeight();
-      scoreCounter.isRecordedController.add(false);
+      scoreCounter.markUnRecorded();
     } else {
       barrierXOnePos -= 0.0125;
     }
     if(barrierXTwoPos < -2){
       barrierXTwoPos += 3.7;
       barrierHeightTwo = BarrierHeightStrategy.generateRandomHeight();
-      scoreCounter.isRecordedController.add(false);
+      scoreCounter.markUnRecorded();
     } else {
       barrierXTwoPos -= 0.0125;
     }

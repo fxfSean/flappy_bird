@@ -17,8 +17,6 @@ class GameEngine {
   bool gameStarted = false;
   bool gameOver = false;
 
-  bool isRecorded = false;
-
   late LandArea landArea;
   late MyBarrier myBarrier;
   late HitStrategy _hitStrategy;
@@ -75,7 +73,6 @@ class GameEngine {
 
   void _resetGame(){
     scoreCounter.reset();
-    isRecorded = false;
     landArea.gameStart();
     myBarrier.resetGame();
     myBird.resetGame();

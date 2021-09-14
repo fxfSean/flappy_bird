@@ -9,13 +9,8 @@ import '../constants/constants.dart';
 class HitStrategy {
   final MyBarrier _myBarrier;
   final MyBird _myBird;
-  bool isRecorded = false;
 
-  HitStrategy(this._myBarrier, this._myBird) {
-    scoreCounter.isRecordedController.stream.listen((event) {
-      isRecorded = event;
-    });
-  }
+  HitStrategy(this._myBarrier, this._myBird);
 
   bool hitTest() {
     final RenderBox birdRenderBox =
@@ -48,8 +43,8 @@ class HitStrategy {
           return;
         }
       }
-      if(!isRecorded && birdRightBorder > barrierRightBorder){
-        scoreCounter.isRecordedController.add(true);
+      if(!scoreCounter.isRecorded && birdRightBorder > barrierRightBorder){
+        scoreCounter.increaseScore();
       }
 
     });
