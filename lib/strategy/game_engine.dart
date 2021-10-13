@@ -26,7 +26,7 @@ class GameEngine {
   void init(TickerProviderStateMixin tickerProviderStateMixin, OnRefreshListener onRefreshListener) {
     landArea = LandArea(tickerProviderStateMixin);
     myBarrier = MyBarrier();
-    myBird = MyBird();
+    myBird = MyBird(tickerProviderStateMixin);
     _hitStrategy = HitStrategy(myBarrier,myBird);
     _refreshListener = onRefreshListener;
 
